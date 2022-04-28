@@ -1,18 +1,17 @@
-import pygame, sys, random, copy, os, threading
+import pygame, sys, random, copy, os
 import numpy as np
+import SaveManager as sl
 from pygame.locals import *
-from win32api import GetSystemMetrics
-DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
 pygame.init()
 pygame.mixer.init()
 pygame.display.init()
-d='mp3 Notes'
+d=f'{os.getcwd()}/mp3 Notes'
 sound=[]
 count=0
 for filename in os.listdir(d):
     sound.append(pygame.mixer.Sound(os.path.join(d, filename)))
-BLOCK_SIZE = BLOCK_W, BLOCK_H = (GetSystemMetrics(0)//49,GetSystemMetrics(1)//49)
-BLOCKS = BLOCKS_COLS, BLOCKS_ROWS = 49,49
+BLOCK_SIZE = BLOCK_W, BLOCK_H = (10,10)
+BLOCKS = BLOCKS_COLS, BLOCKS_ROWS = 60,40
 size = width, height = (BLOCK_W * BLOCKS[0], BLOCK_H * BLOCKS[1])
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Game of Life")
@@ -23,9 +22,9 @@ WHITE = (255, 255, 255)
 class Grid:
     paused = False
 
-    def __init__(self, screen):
+    def __init__(self, screen, cells=[]):
         self.screen = screen
-        self.cells = []
+        self.cells = cells
         for _ in range(BLOCKS_COLS):
             cell = [False] * BLOCKS_ROWS
             self.cells.append(cell)
@@ -119,6 +118,11 @@ while True:
                 grid.randomize()
             elif event.key == K_c:
                 grid.clear_grid()
+            elif event.key == K_s:
+                sl.save(grid.cells)
+            elif event.key == K_l:
+                cells=sl.load()
+                grid=Grid(screen,cells)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             grid.click_at(pygame.mouse.get_pos())
 

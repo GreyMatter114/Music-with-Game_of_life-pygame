@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['Game_of_life.py'],
-             pathex=['C:\\Users\\DELL\\OneDrive\\Desktop\\pygame-life-main'],
+             pathex=['C:\\Users\\DELL\\OneDrive\\Desktop\\pygame-golife'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -33,7 +33,7 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False,
+          console=True,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
