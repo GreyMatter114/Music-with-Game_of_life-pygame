@@ -1,6 +1,6 @@
-import pygame, sys, random, copy, os
-import numpy as np
+import pygame
 import SaveManager as sl
+from Render_Notes import *
 from pygame.locals import *
 pygame.init()
 pygame.mixer.init()
@@ -19,7 +19,7 @@ pygame.display.set_caption("Game of Life")
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 
-class Grid:
+class Grid(object):
     paused = False
 
     def __init__(self, screen, cells=[]):
@@ -28,7 +28,6 @@ class Grid:
         for _ in range(BLOCKS_COLS):
             cell = [False] * BLOCKS_ROWS
             self.cells.append(cell)
-
     def randomize(self):
         for x in range(BLOCKS_COLS):
             for y in range(BLOCKS_ROWS):
@@ -85,8 +84,13 @@ class Grid:
             except IndexError:
                 pass
         return borders
-
+    def maps(self, value):
+        proportion = (value - 0) / (2400 - 0)
+        new_value = (proportion * ( len(sound)- 0)) + 0
+        return new_value
     def step(self):
+        channel1 = pygame.mixer.Channel(0)
+        channel2 = pygame.mixer.Channel(1)
         if self.paused:
             return
         cells = copy.deepcopy(self.cells)
@@ -96,10 +100,16 @@ class Grid:
                 if not self.cells[x][y]:
                     if borders == 3:
                         cells[x][y] = True
-                        pygame.mixer.Channel(0).play(sound[(x%6*6)+(y%6)])
                 elif self.cells[x][y]:
                     if not 2 <= borders <= 3:
                         cells[x][y] = False
+        gets=render(self.cells)
+        if(len(gets)>=2):
+            np.sort(gets)
+            m=gets[len(gets)-1]
+            n=gets[len(gets)-2]
+            channel1.play(sound[m])
+            channel2.play(sound[n])
         self.cells = cells
 
 grid = Grid(screen)

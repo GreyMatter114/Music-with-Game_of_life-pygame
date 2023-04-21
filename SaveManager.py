@@ -1,7 +1,6 @@
-import os
-import numpy as np
 from tkinter import *
 from tkinter import filedialog as fd
+from port import *
 cells1=[]
 
 def save(cells):
